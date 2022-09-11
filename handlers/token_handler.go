@@ -12,8 +12,11 @@ type RequestToken struct {
 	TokenValue string `json:"token"`
 }
 
+const dbName = "mongo_app"
+const collectionName = "test_tokens"
+
 func TokenPost(c echo.Context) error {
-	coll := db.MongoClient().Database("mongo_app").Collection("test_tokens")
+	coll := db.MongoClient().Database(dbName).Collection(collectionName)
 	requestToken := new(RequestToken)
 	if err := c.Bind(requestToken); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
