@@ -1,9 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
+	"passwords_api/db"
 	"passwords_api/utils"
 )
 
@@ -17,6 +21,7 @@ type UserData struct {
 }
 
 func TokenPost(c echo.Context) error {
+	coll := db.MongoClient().Database("mongo_app").Collection("tokens")
 	requestToken := new(RequestToken)
 	if err := c.Bind(requestToken); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -27,5 +32,20 @@ func TokenPost(c echo.Context) error {
 		UserName:     claims["user_name"].(string),
 		PasswordHash: claims["password_hash"].(string),
 	}
-	return c.JSON(http.StatusOK, userData)
+	var result bson.M
+	err := coll.FindOne(context.TODO(), bson.D{{"user_name", userData.UserName}}).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			doc := bson.D{{"user_name", userData.UserName}, {"password_hash", userData.PasswordHash}}
+			_, err := coll.InsertOne(context.TODO(), doc)
+			if err != nil {
+				return c.JSON(http.StatusBadRequest, err.Error())
+			}
+			return c.JSON(http.StatusCreated, "created")
+		}
+	}
+	if userData.PasswordHash != result["password_hash"] {
+		return c.JSON(http.StatusForbidden, "forbidden")
+	}
+	return c.JSON(http.StatusOK, "ok")
 }
