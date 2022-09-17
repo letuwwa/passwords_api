@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
-	"passwords_api/db"
+	"passwords_api/mongo_db"
 	"passwords_api/utils"
 )
 
@@ -21,7 +21,7 @@ type UserData struct {
 }
 
 func TokenPost(c echo.Context) error {
-	coll := db.MongoClient().Database("mongo_app").Collection("tokens")
+	coll := mongo_db.MongoClient().Database("mongo_app").Collection("tokens")
 	requestToken := new(RequestToken)
 	if err := c.Bind(requestToken); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
