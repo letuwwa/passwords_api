@@ -27,7 +27,16 @@ func TokenPost(c echo.Context) error {
 
 	collection := mongo_db.MongoClient().Database(userData.DatabaseName).Collection("tokens")
 
-	_, err := collection.InsertOne(context.TODO(), bson.D{
+	var result bson.M
+	err := collection.FindOne(context.TODO(), bson.D{
+		{"username", userData.UserName},
+	}).Decode(&result)
+
+	if result != nil {
+		return c.JSON(http.StatusBadRequest, "bad request - already in use")
+	}
+
+	_, err = collection.InsertOne(context.TODO(), bson.D{
 		{Key: "username", Value: userData.UserName},
 		{Key: "password_hash", Value: userData.PasswordHash},
 	})
