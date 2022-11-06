@@ -7,6 +7,7 @@ import (
 
 func main() {
 	e := echo.New()
-	e.POST("/token/check", handlers.TokenPost)
+	e.POST("/token", handlers.TokenPost)
+	e.POST("/token/check", handlers.TokenCheck)
 	e.Logger.Fatal(e.Start("localhost:5050"))
 }
