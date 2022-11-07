@@ -17,7 +17,11 @@ func TokenPost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "bad request - token")
 	}
 
-	token, _ := utils.ValidateJWT(requestToken.TokenValue)
+	token, err := utils.ValidateJWT(requestToken.TokenValue)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
 	claims := token.Claims.(jwt.MapClaims)
 	userData := structures.UserData{
 		UserName:     claims["username"].(string),
@@ -28,7 +32,7 @@ func TokenPost(c echo.Context) error {
 	collection := mongo_db.MongoClient().Database(userData.DatabaseName).Collection("tokens")
 
 	var result bson.M
-	err := collection.FindOne(context.TODO(), bson.D{
+	err = collection.FindOne(context.TODO(), bson.D{
 		{"username", userData.UserName},
 	}).Decode(&result)
 

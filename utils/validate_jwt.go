@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var JWTSalt = os.Getenv("")
+var JWTSalt = os.Getenv("secret_key")
 
 func ValidateJWT(tokenString string) (*jwt.Token, error) {
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
