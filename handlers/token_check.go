@@ -24,23 +24,23 @@ func TokenCheck(c echo.Context) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 	userData := structures.UserData{
-		UserName:     claims["username"].(string),
-		PasswordHash: claims["password_hash"].(string),
-		DatabaseName: claims["database_name"].(string),
+		Username: claims["username"].(string),
+		Password: claims["password"].(string),
+		Database: claims["database"].(string),
 	}
 
-	collection := mongo_db.MongoClient().Database(userData.DatabaseName).Collection("tokens")
+	collection := mongo_db.MongoClient().Database(userData.Database).Collection("tokens")
 
 	var result bson.M
 	err = collection.FindOne(context.TODO(), bson.D{
-		{"username", userData.UserName},
+		{"username", userData.Username},
 	}).Decode(&result)
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "bad request - unable  to find")
 	}
 
-	if userData.PasswordHash != result["password_hash"] {
+	if userData.Password != result["password"] {
 		return c.JSON(http.StatusForbidden, "forbidden - not valid hash")
 	}
 

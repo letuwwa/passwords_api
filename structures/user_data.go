@@ -1,7 +1,7 @@
 package structures
 
 type UserData struct {
-	UserName     string `json:"username"`
-	PasswordHash string `json:"password_hash"`
-	DatabaseName string `json:"database_name"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Database string `json:"database"`
 }
