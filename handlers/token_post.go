@@ -5,6 +5,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
+	"log"
 	"net/http"
 	"passwords_api/mongo_db"
 	"passwords_api/structures"
@@ -14,11 +15,13 @@ import (
 func TokenPost(c echo.Context) error {
 	requestToken := new(structures.RequestToken)
 	if err := c.Bind(requestToken); err != nil {
+		log.Printf("bind err: %s", err.Error())
 		return c.JSON(http.StatusBadRequest, "bad request - token")
 	}
 
 	token, err := utils.ValidateJWT(requestToken.TokenValue)
 	if err != nil {
+		log.Printf("token err: %s", err.Error())
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
@@ -36,6 +39,7 @@ func TokenPost(c echo.Context) error {
 		{"username", userData.Username},
 	}).Decode(&result)
 	if result != nil {
+		log.Printf("in use err, username: %s", userData.Username)
 		return c.JSON(http.StatusBadRequest, "bad request - already in use")
 	}
 
@@ -44,6 +48,7 @@ func TokenPost(c echo.Context) error {
 		{Key: "password", Value: userData.Password},
 	})
 	if err != nil {
+		log.Printf("token save err: %s", err.Error())
 		return c.JSON(http.StatusInternalServerError, "internal server error - unable to save values")
 	}
 
