@@ -3,11 +3,13 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"log"
 	"net/http"
 	"passwords_api/handlers"
 )
 
 func main() {
+	log.SetFlags(log.Lshortfile)
 	e := echo.New()
 
 	// Logging Middleware
