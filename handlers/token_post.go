@@ -38,6 +38,7 @@ func TokenPost(c echo.Context) error {
 	err = collection.FindOne(context.TODO(), bson.D{
 		{"username", userData.Username},
 	}).Decode(&result)
+
 	if result != nil {
 		log.Printf("in use err, username: %s", userData.Username)
 		return c.JSON(http.StatusBadRequest, "bad request - already in use")
