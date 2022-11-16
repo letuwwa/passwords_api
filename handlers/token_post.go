@@ -44,9 +44,15 @@ func TokenPost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "bad request - already in use")
 	}
 
+	encryptedPass, encryptErr := utils.EncryptPassword(userData.Password)
+	if encryptErr != nil {
+		log.Printf("encrypt err: %s", encryptErr)
+		return c.JSON(http.StatusInternalServerError, "internal server error - encrypt error")
+	}
+
 	_, err = collection.InsertOne(context.TODO(), bson.D{
 		{Key: "username", Value: userData.Username},
-		{Key: "password", Value: userData.Password},
+		{Key: "password", Value: encryptedPass},
 	})
 	if err != nil {
 		log.Printf("token save err: %s", err.Error())
