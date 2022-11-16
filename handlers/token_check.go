@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
@@ -25,13 +24,7 @@ func TokenCheck(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	claims := token.Claims.(jwt.MapClaims)
-	userData := structures.UserData{
-		Username: claims["username"].(string),
-		Password: claims["password"].(string),
-		Database: claims["database"].(string),
-	}
-
+	userData := structures.UserData{}.FromToken(token)
 	collection := mongo_db.MongoClient().Database(userData.Database).Collection("tokens")
 
 	var result bson.M
