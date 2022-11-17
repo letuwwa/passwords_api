@@ -37,7 +37,7 @@ func TokenCheck(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "bad request - unable  to find")
 	}
 
-	if !utils.CheckPasswordHash(userData.Password, result["password"].(string)) {
+	if !utils.IsPasswordHashValid(userData.Password, result["password"].(string)) {
 		log.Print("invalid password")
 		return c.JSON(http.StatusForbidden, "forbidden - invalid password")
 	}
