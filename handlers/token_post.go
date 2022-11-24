@@ -44,8 +44,9 @@ func TokenPost(c echo.Context) error {
 	}
 
 	_, err = collection.InsertOne(context.TODO(), bson.D{
-		{Key: "username", Value: userData.Username},
 		{Key: "password", Value: encryptedPass},
+		{Key: "username", Value: userData.Username},
+		{Key: "expired_at", Value: userData.ExpiredAt},
 	})
 	if err != nil {
 		log.Printf("token save err: %s", err.Error())

@@ -11,7 +11,7 @@ import (
 	"passwords_api/utils"
 )
 
-func TokenReset(c echo.Context) error {
+func TokenUpdate(c echo.Context) error {
 	requestToken := new(structures.RequestToken)
 	if err := c.Bind(requestToken); err != nil {
 		log.Printf("bind err: %s", err.Error())
@@ -33,12 +33,24 @@ func TokenReset(c echo.Context) error {
 	}).Decode(&result)
 
 	if result != nil {
-		filter := bson.D{{"name", userData.Username}}
-		_, err := collection.ReplaceOne(context.TODO(), filter, userData)
+		encryptedPass, encryptErr := utils.EncryptPassword(userData.Password)
+		if encryptErr != nil {
+			log.Printf("encrypt err: %s", encryptErr)
+			return c.JSON(http.StatusInternalServerError, "internal server error - encrypt error")
+		}
+
+		filter := bson.D{{"username", userData.Username}}
+
+		_, err := collection.ReplaceOne(context.TODO(), filter, bson.D{
+			{Key: "password", Value: encryptedPass},
+			{Key: "username", Value: userData.Username},
+			{Key: "expired_at", Value: userData.ExpiredAt},
+		})
 		if err != nil {
 			log.Printf("updating password err: %s", err.Error())
 			return c.JSON(http.StatusInternalServerError, "internal server error - error during updating password")
 		}
+
 		return c.JSON(http.StatusOK, "ok - user password was updated")
 	}
 

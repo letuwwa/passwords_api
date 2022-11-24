@@ -9,6 +9,7 @@ import (
 	"passwords_api/mongo_db"
 	"passwords_api/structures"
 	"passwords_api/utils"
+	"time"
 )
 
 func TokenCheck(c echo.Context) error {
@@ -42,5 +43,19 @@ func TokenCheck(c echo.Context) error {
 		return c.JSON(http.StatusForbidden, "forbidden - invalid password")
 	}
 
-	return c.JSON(http.StatusOK, "ok")
+	if userData.ExpiredAt != "" {
+		layout := "2006-01-02"
+		date, err := time.Parse(layout, userData.ExpiredAt)
+		if err != nil {
+			log.Printf("error with parsing date: %s", err.Error())
+			return c.JSON(http.StatusInternalServerError, "internal server error - date parsing")
+		}
+
+		if time.Now().Unix() > date.Unix() {
+			log.Printf("password expired: %s", date)
+			return c.JSON(http.StatusForbidden, "forbidden - password expired")
+		}
+	}
+
+	return c.JSON(http.StatusOK, "ok - password is correct")
 }
