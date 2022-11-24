@@ -31,6 +31,7 @@ func main() {
 	})
 	e.POST("/token", handlers.TokenPost)
 	e.POST("/token/check", handlers.TokenCheck)
+	e.POST("/token/reset", handlers.TokenReset)
 
 	e.Logger.Fatal(e.Start("localhost:5050"))
 }
