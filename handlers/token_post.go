@@ -15,7 +15,7 @@ func TokenPost(c echo.Context) error {
 	requestToken := new(structures.RequestToken)
 	if err := c.Bind(requestToken); err != nil {
 		log.Printf("bind err: %s", err.Error())
-		return c.JSON(http.StatusBadRequest, "bad request - token")
+		return c.JSON(http.StatusBadRequest, "bad request - invalid token request")
 	}
 
 	token, err := utils.ValidateJWT(requestToken.TokenValue)
