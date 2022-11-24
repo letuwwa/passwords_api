@@ -36,6 +36,7 @@ func TokenReset(c echo.Context) error {
 		filter := bson.D{{"name", userData.Username}}
 		_, err := collection.ReplaceOne(context.TODO(), filter, userData)
 		if err != nil {
+			log.Printf("updating password err: %s", err.Error())
 			return c.JSON(http.StatusInternalServerError, "internal server error - error during updating password")
 		}
 		return c.JSON(http.StatusOK, "ok - user password was updated")
