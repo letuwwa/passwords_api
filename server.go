@@ -12,6 +12,9 @@ func main() {
 	log.SetFlags(log.Lshortfile)
 	e := echo.New()
 
+	// Recover Middleware
+	e.Use(middleware.Recover())
+
 	// Logging Middleware
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${method} - ${uri} - ${status} - ${time_rfc3339_nano}\n",
