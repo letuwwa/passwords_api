@@ -25,20 +25,20 @@ func TokenCheck(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	userData := structures.UserData{}.FromToken(token)
-	collection := mongo_db.MongoClient().Database(userData.Database).Collection("tokens")
+	userDataCheck := structures.UserDataCheck{}.FromToken(token)
+	collection := mongo_db.MongoClient().Database(userDataCheck.Database).Collection("tokens")
 
 	var result bson.M
 	err = collection.FindOne(context.TODO(), bson.D{
-		{"username", userData.Username},
+		{"username", userDataCheck.Username},
 	}).Decode(&result)
 
 	if err != nil {
-		log.Printf("unable to find, username: %s", userData.Username)
+		log.Printf("unable to find, username: %s", userDataCheck.Username)
 		return c.JSON(http.StatusBadRequest, "bad request - unable  to find")
 	}
 
-	if !utils.IsPasswordHashValid(userData.Password, result["password"].(string)) {
+	if !utils.IsPasswordHashValid(userDataCheck.Password, result["password"].(string)) {
 		log.Print("invalid password")
 		return c.JSON(http.StatusForbidden, "forbidden - invalid password")
 	}
