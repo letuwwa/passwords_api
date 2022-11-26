@@ -43,9 +43,9 @@ func TokenCheck(c echo.Context) error {
 		return c.JSON(http.StatusForbidden, "forbidden - invalid password")
 	}
 
-	if userData.ExpiredAt != "" {
+	if result["expired_at"].(string) != "" {
 		layout := "2006-01-02"
-		date, err := time.Parse(layout, userData.ExpiredAt)
+		date, err := time.Parse(layout, result["expired_at"].(string))
 		if err != nil {
 			log.Printf("error with parsing date: %s", err.Error())
 			return c.JSON(http.StatusInternalServerError, "internal server error - date parsing")
