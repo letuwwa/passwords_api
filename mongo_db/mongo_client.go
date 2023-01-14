@@ -2,10 +2,11 @@ package mongo_db
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"os"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func MongoClient() *mongo.Client {

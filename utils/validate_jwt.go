@@ -2,8 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"github.com/golang-jwt/jwt"
 	"os"
+
+	"github.com/golang-jwt/jwt"
 )
 
 var JWTSalt = os.Getenv("secret_key")

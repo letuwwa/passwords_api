@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"context"
-	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"net/http"
 	"passwords_api/mongo_db"
 	"passwords_api/structures"
 	"passwords_api/utils"
+
+	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TokenPost(c echo.Context) error {
