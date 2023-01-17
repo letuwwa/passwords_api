@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"passwords_api/mongo_db"
-	"passwords_api/structures"
-	"passwords_api/utils"
+	"passwords_api/cmd/mongo_db"
+	"passwords_api/cmd/structures"
+	"passwords_api/cmd/utils"
 	"time"
 
 	"github.com/labstack/echo/v4"

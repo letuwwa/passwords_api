@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"context"
+	"passwords_api/cmd/mongo_db"
+	"passwords_api/cmd/structures"
+	"passwords_api/cmd/utils"
 
 	"log"
 	"net/http"
-	"passwords_api/mongo_db"
-	"passwords_api/structures"
-	"passwords_api/utils"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"

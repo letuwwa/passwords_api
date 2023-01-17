@@ -1,8 +1,8 @@
-package main
+package cmd
 
 import (
 	"net/http"
-	"passwords_api/handlers"
+	"passwords_api/cmd/handlers"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
