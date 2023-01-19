@@ -1,5 +1,3 @@
-# Simple API to store and encrypt passwords
-
 ## How to run:
     make start
 
